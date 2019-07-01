@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncClient", "AsyncClientServer\AsyncClient\AsyncClient.csproj", "{2D17194E-B6CE-4CD1-BE5A-EB1E0BB181F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTcpClient", "AsyncTcpClient\AsyncTcpClient.csproj", "{CB14384D-9C53-4A85-8499-D83822644FED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncServer", "AsyncClientServer\AsyncServer\AsyncServer.csproj", "{9D553035-F409-48FE-8A44-862002DC18CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTcpServer", "AsyncTcpServer\AsyncTcpServer.csproj", "{09FBBA25-E218-4F9B-83A6-38DC80CB9561}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCommon", "AsyncClientServer\AsyncCommon\AsyncCommon.csproj", "{5E38C867-F31B-4001-9A47-5EB3D2429469}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTcpClient.Example", "AsyncTcpClient.Example\AsyncTcpClient.Example.csproj", "{638085B6-5381-42E7-82EA-62BCFA90CF89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTcpServer.Example", "AsyncTcpServer.Example\AsyncTcpServer.Example.csproj", "{516C6FB3-386F-4ADE-B295-F0044114796A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2D17194E-B6CE-4CD1-BE5A-EB1E0BB181F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D17194E-B6CE-4CD1-BE5A-EB1E0BB181F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D17194E-B6CE-4CD1-BE5A-EB1E0BB181F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D17194E-B6CE-4CD1-BE5A-EB1E0BB181F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D553035-F409-48FE-8A44-862002DC18CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D553035-F409-48FE-8A44-862002DC18CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D553035-F409-48FE-8A44-862002DC18CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D553035-F409-48FE-8A44-862002DC18CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E38C867-F31B-4001-9A47-5EB3D2429469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E38C867-F31B-4001-9A47-5EB3D2429469}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E38C867-F31B-4001-9A47-5EB3D2429469}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E38C867-F31B-4001-9A47-5EB3D2429469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB14384D-9C53-4A85-8499-D83822644FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB14384D-9C53-4A85-8499-D83822644FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB14384D-9C53-4A85-8499-D83822644FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB14384D-9C53-4A85-8499-D83822644FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09FBBA25-E218-4F9B-83A6-38DC80CB9561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09FBBA25-E218-4F9B-83A6-38DC80CB9561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09FBBA25-E218-4F9B-83A6-38DC80CB9561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09FBBA25-E218-4F9B-83A6-38DC80CB9561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{638085B6-5381-42E7-82EA-62BCFA90CF89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{638085B6-5381-42E7-82EA-62BCFA90CF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{638085B6-5381-42E7-82EA-62BCFA90CF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{638085B6-5381-42E7-82EA-62BCFA90CF89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{516C6FB3-386F-4ADE-B295-F0044114796A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{516C6FB3-386F-4ADE-B295-F0044114796A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{516C6FB3-386F-4ADE-B295-F0044114796A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{516C6FB3-386F-4ADE-B295-F0044114796A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

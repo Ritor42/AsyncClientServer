@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AsyncServer</id>
-    <version>0.6</version>
+    <version>0.6.3</version>
     <authors>Ritor</authors>
     <owners>Ritor</owners>
     <licenseUrl>https://github.com/Ritor42/AsyncClientServer/blob/master/LICENSE</licenseUrl>

@@ -47,7 +47,7 @@ namespace AsyncTcpServer
             this.connectedClients = new ConcurrentDictionary<int, Client>();
             this.clientFactories = factories.ToDictionary(x => x.Key, x => x.Value) ?? throw new ArgumentNullException(nameof(factories));
             this.clientControllers = controllers.ToDictionary(x => x.Key, x => x.Value) ?? throw new ArgumentNullException(nameof(controllers));
-            this.clientControllers.Values.Select(x => x.TcpServer = this);
+            this.clientControllers.Values.ToList().ForEach(x => x.TcpServer = this);
 
             this.ServerHasStarted += this.Server_ServerHasStarted;
 

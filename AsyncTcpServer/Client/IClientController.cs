@@ -1,8 +1,8 @@
-﻿// <copyright file="ClientController.cs" company="PlaceholderCompany">
+﻿// <copyright file="IClientController.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace AsyncTcpClient
+namespace AsyncTcpServer
 {
     using System;
     using System.Collections.Generic;
@@ -11,29 +11,35 @@ namespace AsyncTcpClient
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Base controller for client messages.
+    /// Defines basic logic for client controllers.
     /// </summary>
-    public abstract class ClientController
+    public interface IClientController
     {
-        // HOGYAN KÜLDJÜNK VISSZA ADATOT?
+        /// <summary>
+        /// Gets or sets the Tcp server for communication with the client.
+        /// </summary>
+        TcpServer TcpServer { get; set; }
 
         /// <summary>
         /// Handles a received file from a client.
         /// </summary>
+        /// <param name="client">Client.</param>
         /// <param name="filepath">Received file path.</param>
-        public abstract void HandleFile(string filepath);
+        void HandleFile(in Client client, in string filepath);
 
         /// <summary>
         /// Handles a received message from a client.
         /// </summary>
+        /// <param name="client">Client.</param>
         /// <param name="message">Received message.</param>
-        public abstract void HandleMessage(string message);
+        void HandleMessage(in Client client, in string message);
 
         /// <summary>
         /// Handles a received custom message from a client.
         /// </summary>
+        /// <param name="client">Client.</param>
         /// <param name="message">Received message.</param>
         /// <param name="header">Received custom header.</param>
-        public abstract void HandleCustomHeaderReceived(string message, string header);
+        void HandleCustomHeaderReceived(in Client client, in string message, in string header);
     }
 }

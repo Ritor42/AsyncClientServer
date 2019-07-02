@@ -1,4 +1,4 @@
-﻿// <copyright file="Server.cs" company="PlaceholderCompany">
+﻿// <copyright file="TcpServer.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -19,15 +19,15 @@ namespace AsyncTcpServer
     /// <summary>
     /// An asynchronous Tcp server which handles compressing, encryption etc.
     /// </summary>
-    public class Server : AsyncSocketListener
+    public class TcpServer : AsyncSocketListener
     {
         private static ILogger logger;
 
-        private IDictionary<string, IClientStateFactory> clientFactories;
+        private IDictionary<string, IClientFactory> clientFactories;
         private IDictionary<Type, IClientController> clientControllers;
-        private ConcurrentDictionary<int, ClientState> connectedClients;
+        private ConcurrentDictionary<int, Client> connectedClients;
 
-        static Server()
+        static TcpServer()
         {
             Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
@@ -36,17 +36,18 @@ namespace AsyncTcpServer
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Server"/> class.
+        /// Initializes a new instance of the <see cref="TcpServer"/> class.
         /// </summary>
-        /// <param name="factories">Client factories which will create the proper object</param>
-        /// <param name="controllers">Controllers that will handled the proper objects</param>
-        public Server(
-            IDictionary<string, IClientStateFactory> factories,
-            IDictionary<Type, IClientController> controllers)
+        /// <param name="factories">Client factories which will create the proper object.</param>
+        /// <param name="controllers">Controllers that will handled the proper objects.</param>
+        public TcpServer(
+            in IDictionary<string, IClientFactory> factories,
+            in IDictionary<Type, IClientController> controllers)
         {
-            this.connectedClients = new ConcurrentDictionary<int, ClientState>();
-            this.clientFactories = factories.ToDictionary(x => x.Key, x => x.Value);
-            this.clientControllers = controllers.ToDictionary(x => x.Key, x => x.Value);
+            this.connectedClients = new ConcurrentDictionary<int, Client>();
+            this.clientFactories = factories.ToDictionary(x => x.Key, x => x.Value) ?? throw new ArgumentNullException(nameof(factories));
+            this.clientControllers = controllers.ToDictionary(x => x.Key, x => x.Value) ?? throw new ArgumentNullException(nameof(controllers));
+            this.clientControllers.Values.Select(x => x.TcpServer = this);
 
             this.ServerHasStarted += this.Server_ServerHasStarted;
 
@@ -76,7 +77,7 @@ namespace AsyncTcpServer
         /// <summary>
         /// Gets the connected clients.
         /// </summary>
-        public IDictionary<int, ClientState> ConnectedClients => this.connectedClients.ToDictionary(x => x.Key, x => x.Value);
+        public IDictionary<int, Client> ConnectedClients => this.connectedClients.ToDictionary(x => x.Key, x => x.Value);
 
         private void Server_ServerHasStarted()
         {
@@ -90,7 +91,7 @@ namespace AsyncTcpServer
 
         private void Server_ClientDisconnected(int id)
         {
-            if (this.connectedClients.TryRemove(id, out ClientState deleted))
+            if (this.connectedClients.TryRemove(id, out Client deleted))
             {
                 Logger.Information($"Client disconnected from {deleted.SocketInfo.LocalIPv4}");
             }
@@ -98,7 +99,7 @@ namespace AsyncTcpServer
 
         private void Server_MessageSubmitted(int id, bool close)
         {
-            if (this.connectedClients.TryGetValue(id, out ClientState client))
+            if (this.connectedClients.TryGetValue(id, out Client client))
             {
                 Logger.Debug($"Message submitted to {client.SocketInfo.LocalIPv4} with close = {close}");
             }
@@ -106,7 +107,7 @@ namespace AsyncTcpServer
 
         private void Server_FileReceived(int id, string filepath)
         {
-            if (this.connectedClients.TryGetValue(id, out ClientState client))
+            if (this.connectedClients.TryGetValue(id, out Client client))
             {
                 Logger.Debug($"File received from {client.SocketInfo.LocalIPv4} to {filepath}");
                 this.clientControllers[client.GetType()].HandleFile(client, filepath);
@@ -115,7 +116,7 @@ namespace AsyncTcpServer
 
         private void Server_MessageReceived(int id, string msg)
         {
-            if (this.connectedClients.TryGetValue(id, out ClientState client))
+            if (this.connectedClients.TryGetValue(id, out Client client))
             {
                 Logger.Debug($"Message received from {client.SocketInfo.LocalIPv4}{Environment.NewLine}{msg}");
                 this.clientControllers[client.GetType()].HandleMessage(client, msg);
@@ -143,7 +144,7 @@ namespace AsyncTcpServer
 
         private void Server_ProgressFileReceived(int id, int bytes, int messageSize)
         {
-            if (this.connectedClients.TryGetValue(id, out ClientState client))
+            if (this.connectedClients.TryGetValue(id, out Client client))
             {
                 Logger.Debug($"File progress received from {client.SocketInfo.LocalIPv4} {bytes}/{messageSize}");
 
@@ -153,7 +154,7 @@ namespace AsyncTcpServer
 
         private void Server_CustomHeaderReceived(int id, string msg, string header)
         {
-            if (this.connectedClients.TryGetValue(id, out ClientState client))
+            if (this.connectedClients.TryGetValue(id, out Client client))
             {
                 Logger.Debug($"Custom header received from {client.SocketInfo.LocalIPv4}{Environment.NewLine}{msg}{Environment.NewLine}Header: {header}");
                 this.clientControllers[client.GetType()].HandleCustomHeaderReceived(client, msg, header);
@@ -162,7 +163,7 @@ namespace AsyncTcpServer
 
         private void Server_MessageFailed(int id, byte[] messageData, string exceptionMessage)
         {
-            if (this.connectedClients.TryGetValue(id, out ClientState client))
+            if (this.connectedClients.TryGetValue(id, out Client client))
             {
                 Logger.Error($"Message failed to send to {client.SocketInfo.LocalIPv4} with length {messageData.Length}{Environment.NewLine}{exceptionMessage}");
             }
@@ -170,7 +171,7 @@ namespace AsyncTcpServer
 
         private void Server_ErrorThrown(string exceptionMessage)
         {
-            Logger.Error($"Error thrown{Environment.NewLine}{exceptionMessage}");
+            Logger.Error($"Error thrown:{Environment.NewLine}{exceptionMessage}");
         }
     }
 }

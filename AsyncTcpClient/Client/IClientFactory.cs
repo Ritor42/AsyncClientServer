@@ -1,4 +1,8 @@
-﻿namespace AsyncTcpServer
+﻿// <copyright file="IClientFactory.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace AsyncTcpClient
 {
     using System;
     using System.Collections.Generic;
@@ -9,12 +13,12 @@
     /// <summary>
     /// Defines basic logic for client state factories.
     /// </summary>
-    public interface IClientStateFactory
+    public interface IClientFactory
     {
         /// <summary>
         /// Creates a default client object.
         /// </summary>
         /// <returns>Client.</returns>
-        ClientState Create();
+        Client Create();
     }
 }

@@ -1,4 +1,4 @@
-﻿// <copyright file="Client.cs" company="PlaceholderCompany">
+﻿// <copyright file="TcpClient.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -15,13 +15,13 @@ namespace AsyncTcpClient
     /// <summary>
     /// An asynchronous Tcp client which handles compressing, encryption etc.
     /// </summary>
-    public class Client : AsyncSocketClient
+    public class TcpClient : AsyncSocketClient
     {
         private static ILogger logger;
+        private readonly Client client;
+        private readonly IClientController controller;
 
-        private readonly ClientState state;
-
-        static Client()
+        static TcpClient()
         {
             Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
@@ -30,12 +30,17 @@ namespace AsyncTcpClient
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
+        /// Initializes a new instance of the <see cref="TcpClient"/> class.
         /// </summary>
-        /// <param name="stateFactory">When a client connects to the server this creates the proper object.</param>
-        public Client(ClientStateFactory stateFactory)
+        /// <param name="factory">Client factories which will create the proper object.</param>
+        /// <param name="controller">Controllers that will handled the proper objects.</param>
+        public TcpClient(
+            IClientFactory factory,
+            IClientController controller)
         {
-            this.state = stateFactory.Create();
+            this.client = factory.Create() ?? throw new ArgumentNullException(nameof(factory));
+            this.controller = controller ?? throw new ArgumentNullException(nameof(controller));
+            this.controller.TcpClient = this;
 
             this.Connected += this.Client_Connected;
             this.Disconnected += this.Client_Disconnected;
@@ -63,7 +68,7 @@ namespace AsyncTcpClient
         /// <summary>
         /// Gets the client's state.
         /// </summary>
-        public ClientState State => this.state;
+        public Client Client => this.client;
 
         private void Client_Connected(SocketClient tcpClient)
         {
@@ -83,24 +88,26 @@ namespace AsyncTcpClient
         private void Client_FileReceived(SocketClient tcpClient, string path)
         {
             Logger.Debug($"File received from {tcpClient.Ip}:{tcpClient.Port} to {path}");
-            this.state.Controller.HandleFile(path);
+            this.controller.HandleFile(this.client, path);
         }
 
         private void Client_MessageReceived(SocketClient tcpClient, string msg)
         {
             Logger.Debug($"Message received from {tcpClient.Ip}:{tcpClient.Port}{Environment.NewLine}{msg}");
-            this.state.Controller.HandleMessage(msg);
+            this.controller.HandleMessage(this.client, msg);
         }
 
         private void Client_ProgressFileReceived(SocketClient tcpClient, int bytesReceived, int messageSize)
         {
             Logger.Debug($"File progress received from {tcpClient.Ip}:{tcpClient.Port}  {bytesReceived}/{messageSize}");
+
+            // ?
         }
 
         private void Client_CustomHeaderReceived(SocketClient tcpClient, string msg, string header)
         {
             Logger.Debug($"Custom header received from {tcpClient.Ip}:{tcpClient.Port}{Environment.NewLine}{msg}{Environment.NewLine}Header: {header}");
-            this.state.Controller.HandleCustomHeaderReceived(msg, header);
+            this.controller.HandleCustomHeaderReceived(this.client, msg, header);
         }
 
         private void Client_MessageFailed(SocketClient tcpClient, byte[] messageData, string exceptionMessage)

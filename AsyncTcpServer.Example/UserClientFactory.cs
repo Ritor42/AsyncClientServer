@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace AsyncTcpServer.Example
 {
-    internal class UserClientStateFactory : ClientStateFactory
+    internal class UserClientFactory : ClientFactory<UserClient>
     {
-        public override ClientState Create()
+        public override UserClient Create()
         {
-            return new UserClientState()
+            return new UserClient()
             {
                 Encrypt = true,
-                Controller = new UserClientController(),
             };
         }
     }

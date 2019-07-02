@@ -9,11 +9,11 @@ namespace AsyncTcpClient.Example
 {
     class Program
     {
-        private static Client client;
+        private static TcpClient client;
 
         static Program()
         {
-            Client.Logger = new LoggerConfiguration()
+            TcpClient.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -21,11 +21,12 @@ namespace AsyncTcpClient.Example
 
         static void Main(string[] args)
         {
-            var factory = new UserClientStateFactory();
+            var factory = new UserClientFactory();
+            var controller = new UserClientController();
 
-            client = new Client(factory);
+            client = new TcpClient(factory, controller);
             client.StartClient("127.0.0.1", 4040);
-
+            client.SendMessage("UserClient", false);
             Task.Run(() => Send());
 
             Console.ReadLine();

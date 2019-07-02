@@ -9,11 +9,11 @@ namespace AsyncTcpServer.Example
 {
     class Program
     {
-        private static Server server;
+        private static TcpServer server;
 
         static Program()
         {
-            Server.Logger = new LoggerConfiguration()
+            TcpServer.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -21,9 +21,13 @@ namespace AsyncTcpServer.Example
 
         static void Main(string[] args)
         {
-            var factory = new UserClientStateFactory();
+            var factories = new Dictionary<string, IClientFactory>();
+            var controllers = new Dictionary<Type, IClientController>();
 
-            server = new Server(factory);
+            factories.Add("UserClient", new UserClientFactory());
+            controllers.Add(typeof(UserClient), new UserClientController());
+
+            server = new TcpServer(factories, controllers);
             server.StartListening(4040);
 
             Task.Run(() => BroadCast());

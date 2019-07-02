@@ -1,4 +1,4 @@
-﻿// <copyright file="ClientState.cs" company="PlaceholderCompany">
+﻿// <copyright file="Client.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -14,7 +14,7 @@ namespace AsyncTcpServer
     /// <summary>
     /// Contains basic information about the client.
     /// </summary>
-    public abstract class ClientState
+    public abstract class Client
     {
         /// <summary>
         /// Gets or sets the client's ID.

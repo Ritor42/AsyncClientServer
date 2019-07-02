@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsyncTcpServer.Example
 {
-    internal class UserClientState : ClientState
+    internal class UserClient : Client
     {
     }
 }

@@ -1,8 +1,4 @@
-﻿// <copyright file="ClientStateFactory.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace AsyncTcpServer
+﻿namespace AsyncTcpServer
 {
     using System;
     using System.Collections.Generic;
@@ -13,12 +9,21 @@ namespace AsyncTcpServer
     /// <summary>
     /// Base client factory which can create a default client.
     /// </summary>
-    public abstract class ClientStateFactory
+    /// <typeparam name="TClient">Client type</typeparam>
+    public abstract class ClientStateFactory<TClient> : IClientStateFactory
+        where TClient : ClientState
     {
         /// <summary>
-        /// Creates a default client.
+        /// Creates a default client object.
         /// </summary>
-        /// <returns>Client.</returns>
-        public abstract ClientState Create();
+        /// <returns>Client</returns>
+        public abstract TClient Create();
+
+
+        /// <inheritdoc/>
+        ClientState IClientStateFactory.Create()
+        {
+            return this.Create();
+        }
     }
 }

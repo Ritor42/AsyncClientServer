@@ -54,6 +54,8 @@
     <Compile Include="ClientController.cs" />
     <Compile Include="ClientState.cs" />
     <Compile Include="ClientStateFactory.cs" />
+    <Compile Include="IClientController.cs" />
+    <Compile Include="IClientStateFactory.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -23,7 +23,8 @@ namespace AsyncTcpServer
     {
         private static ILogger logger;
 
-        private readonly ClientStateFactory clientFactory;
+        private IDictionary<string, IClientStateFactory> clientFactories;
+        private IDictionary<Type, IClientController> clientControllers;
         private ConcurrentDictionary<int, ClientState> connectedClients;
 
         static Server()
@@ -37,16 +38,15 @@ namespace AsyncTcpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="Server"/> class.
         /// </summary>
-        /// <param name="stateFactory">When a client connects to the server this creates the proper object.</param>
-        public Server(ClientStateFactory stateFactory)
+        /// <param name="factories">Client factories which will create the proper object</param>
+        /// <param name="controllers">Controllers that will handled the proper objects</param>
+        public Server(
+            IDictionary<string, IClientStateFactory> factories,
+            IDictionary<Type, IClientController> controllers)
         {
-            this.clientFactory = stateFactory;
-
-            this.MessageEncryption = new Aes256();
-            this.FileCompressor = new GZipCompression();
-            this.FolderCompressor = new ZipCompression();
-
             this.connectedClients = new ConcurrentDictionary<int, ClientState>();
+            this.clientFactories = factories.ToDictionary(x => x.Key, x => x.Value);
+            this.clientControllers = controllers.ToDictionary(x => x.Key, x => x.Value);
 
             this.ServerHasStarted += this.Server_ServerHasStarted;
 
@@ -85,13 +85,7 @@ namespace AsyncTcpServer
 
         private void Server_ClientConnected(int id, ISocketInfo clientInfo)
         {
-            var client = this.clientFactory.Create();
-            client.SocketInfo = clientInfo;
-
-            if (this.connectedClients.TryAdd(id, client))
-            {
-                Logger.Information($"Client connected from {clientInfo.LocalIPv4}");
-            }
+            Logger.Information($"Client connected from {clientInfo.LocalIPv4}");
         }
 
         private void Server_ClientDisconnected(int id)
@@ -115,7 +109,7 @@ namespace AsyncTcpServer
             if (this.connectedClients.TryGetValue(id, out ClientState client))
             {
                 Logger.Debug($"File received from {client.SocketInfo.LocalIPv4} to {filepath}");
-                client.Controller.HandleFile(filepath);
+                this.clientControllers[client.GetType()].HandleFile(client, filepath);
             }
         }
 
@@ -124,7 +118,26 @@ namespace AsyncTcpServer
             if (this.connectedClients.TryGetValue(id, out ClientState client))
             {
                 Logger.Debug($"Message received from {client.SocketInfo.LocalIPv4}{Environment.NewLine}{msg}");
-                client.Controller.HandleMessage(msg);
+                this.clientControllers[client.GetType()].HandleMessage(client, msg);
+            }
+            else
+            {
+                Logger.Debug($"Message received to determine which type of client it is.{Environment.NewLine}{msg}");
+                if (this.clientFactories.ContainsKey(msg))
+                {
+                    var factory = this.clientFactories[msg];
+
+                    var clientState = factory.Create();
+                    clientState.ID = id;
+                    clientState.SocketInfo = this.GetConnectedClients()[id];
+                    this.connectedClients[id] = clientState;
+
+                    Logger.Debug($"Successful definition: {factory.GetType()}->{clientState.GetType()}");
+                }
+                else
+                {
+                    Logger.Debug($"Unsuccessful definition.");
+                }
             }
         }
 
@@ -143,6 +156,7 @@ namespace AsyncTcpServer
             if (this.connectedClients.TryGetValue(id, out ClientState client))
             {
                 Logger.Debug($"Custom header received from {client.SocketInfo.LocalIPv4}{Environment.NewLine}{msg}{Environment.NewLine}Header: {header}");
+                this.clientControllers[client.GetType()].HandleCustomHeaderReceived(client, msg, header);
             }
         }
 

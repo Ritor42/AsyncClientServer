@@ -13,27 +13,57 @@ namespace AsyncTcpServer
     /// <summary>
     /// Base controller for client messages.
     /// </summary>
-    public abstract class ClientController
+    /// <typeparam name="TClient">Client type</typeparam>
+    public abstract class ClientController<TClient> : IClientController
+        where TClient : ClientState
     {
-        // HOGYAN KÜLDJÜNK VISSZA ADATOT?
-
         /// <summary>
         /// Handles a received file from a client.
         /// </summary>
+        /// <param name="client">Sender</param>
         /// <param name="filepath">Received file path.</param>
-        public abstract void HandleFile(string filepath);
+        public abstract void HandleFile(TClient client, string filepath);
 
         /// <summary>
         /// Handles a received message from a client.
         /// </summary>
+        /// <param name="client">Sender</param>
         /// <param name="message">Received message.</param>
-        public abstract void HandleMessage(string message);
+        public abstract void HandleMessage(TClient client, string message);
 
         /// <summary>
         /// Handles a received custom message from a client.
         /// </summary>
+        /// <param name="client">Sender</param>
         /// <param name="message">Received message.</param>
         /// <param name="header">Received custom header.</param>
-        public abstract void HandleCustomHeaderReceived(string message, string header);
+        public abstract void HandleCustomHeaderReceived(TClient client, string message, string header);
+
+        /// <inheritdoc/>
+        public void HandleFile(ClientState client, string filepath)
+        {
+            if(client is TClient tclient)
+            {
+                this.HandleFile(tclient, filepath);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void HandleMessage(ClientState client, string message)
+        {
+            if (client is TClient tclient)
+            {
+                this.HandleMessage(tclient, message);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void HandleCustomHeaderReceived(ClientState client, string message, string header)
+        {
+            if (client is TClient tclient)
+            {
+                this.HandleCustomHeaderReceived(tclient, message, header);
+            }
+        }
     }
 }

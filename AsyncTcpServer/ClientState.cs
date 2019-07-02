@@ -17,6 +17,11 @@ namespace AsyncTcpServer
     public abstract class ClientState
     {
         /// <summary>
+        /// Gets or sets the client's ID.
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the communication channel need to be encrypted.
         /// </summary>
         public bool Encrypt { get; set; }
@@ -25,10 +30,5 @@ namespace AsyncTcpServer
         /// Gets or sets the socket info.
         /// </summary>
         public ISocketInfo SocketInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the controller.
-        /// </summary>
-        public ClientController Controller { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>AsyncServer</id>
-    <version>0.6.3</version>
+    <version>0.6.5</version>
     <authors>Ritor</authors>
     <owners>Ritor</owners>
     <licenseUrl>https://github.com/Ritor42/AsyncClientServer/blob/master/LICENSE</licenseUrl>
@@ -11,5 +11,13 @@
     <description>Asynchronous TCP C# library for server applications.</description>
     <copyright>Copyright 2019</copyright>
     <tags>asynchronous client-server server csharp async compression tcp tcpserver tcp-server</tags>
+	<references>
+            <reference file="AsyncClientServer.dll"></reference>
+            <reference file="AsyncTcpServer.dll"></reference>
+        </references>
   </metadata>
+  <files>
+  <file src="bin\Debug\AsyncTcpServer.dll" target="lib" />
+  <file src="bin\Debug\AsyncClientServer.dll" target="lib" />
+  </files>
 </package>

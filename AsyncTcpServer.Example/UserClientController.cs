@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AsyncTcpServer;
+﻿// <copyright file="UserClientController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace AsyncTcpServer.Example
 {
+    using System;
+    using AsyncTcpServer;
+
     internal class UserClientController : ClientController<UserClient>
     {
         public override void HandleFile(in UserClient client, in string filepath)

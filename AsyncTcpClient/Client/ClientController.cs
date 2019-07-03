@@ -4,12 +4,6 @@
 
 namespace AsyncTcpClient
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Base controller for client messages.
     /// </summary>

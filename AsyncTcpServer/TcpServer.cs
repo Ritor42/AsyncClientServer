@@ -8,10 +8,6 @@ namespace AsyncTcpServer
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using AsyncClientServer.Messaging.Compression;
-    using AsyncClientServer.Messaging.Cryptography;
     using AsyncClientServer.Messaging.Metadata;
     using AsyncClientServer.Server;
     using Serilog;

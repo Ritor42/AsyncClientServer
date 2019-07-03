@@ -1,13 +1,14 @@
-﻿using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="Program.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace AsyncTcpClient.Example
 {
-    class Program
+    using System;
+    using System.Threading.Tasks;
+    using Serilog;
+
+    public class Program
     {
         private static TcpClient client;
 
@@ -19,7 +20,7 @@ namespace AsyncTcpClient.Example
                 .CreateLogger();
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var factory = new UserClientFactory();
             var controller = new UserClientController();
@@ -32,7 +33,7 @@ namespace AsyncTcpClient.Example
             Console.ReadLine();
         }
 
-        static async Task Send()
+        private static async Task Send()
         {
             while (true)
             {

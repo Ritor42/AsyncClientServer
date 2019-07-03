@@ -1,13 +1,15 @@
-﻿using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="Program.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace AsyncTcpServer.Example
 {
-    class Program
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Serilog;
+
+    internal class Program
     {
         private static TcpServer server;
 
@@ -19,7 +21,7 @@ namespace AsyncTcpServer.Example
                 .CreateLogger();
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var factories = new Dictionary<string, IClientFactory>();
             var controllers = new Dictionary<Type, IClientController>();
@@ -35,9 +37,9 @@ namespace AsyncTcpServer.Example
             Console.ReadLine();
         }
 
-        static async Task BroadCast()
+        private static async Task BroadCast()
         {
-            while(true)
+            while (true)
             {
                 await server.SendMessageToAllClientsAsync("Hello clients!", false);
                 await Task.Delay(500);

@@ -8,17 +8,17 @@ namespace AsyncTcpClient.Example
 
     internal class UserClientController : ClientController<UserClient>
     {
-        public override void HandleFile(in UserClient client, in string filepath)
+        public override void HandleFile(UserClient client, string filepath)
         {
             Console.WriteLine($"New file received: {filepath}");
         }
 
-        public override void HandleMessage(in UserClient client, in string message)
+        public override void HandleMessage(UserClient client, string message)
         {
             Console.WriteLine($"New message received: {message}");
         }
 
-        public override void HandleCustomHeaderReceived(in UserClient client, in string message, in string header)
+        public override void HandleCustomHeaderReceived(UserClient client, string message, string header)
         {
             Console.WriteLine($"New custom message received: {message} with {header} header.");
         }

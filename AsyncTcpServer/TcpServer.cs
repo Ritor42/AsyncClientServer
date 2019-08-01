@@ -54,11 +54,7 @@ namespace AsyncTcpServer
 
             this.FileReceived += this.Server_FileReceived;
             this.MessageReceived += this.Server_MessageReceived;
-            this.ProgressFileReceived += this.Server_ProgressFileReceived;
             this.CustomHeaderReceived += this.Server_CustomHeaderReceived;
-
-            this.MessageFailed += this.Server_MessageFailed;
-            this.ErrorThrown += this.Server_ErrorThrown;
         }
 
         /// <summary>

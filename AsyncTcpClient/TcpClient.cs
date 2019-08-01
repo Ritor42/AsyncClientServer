@@ -38,8 +38,8 @@ namespace AsyncTcpClient
             this.controller = controller ?? throw new ArgumentNullException(nameof(controller));
             this.controller.TcpClient = this;
 
-            this.Connected += this.Client_Connected;
-            this.Disconnected += this.Client_Disconnected;
+            this.ConnectedToServer += this.Client_Connected;
+            this.DisconnectedFromServer += this.Client_Disconnected;
 
             this.MessageSubmitted += this.Client_MessageSubmitted;
 
@@ -47,9 +47,6 @@ namespace AsyncTcpClient
             this.MessageReceived += this.Client_MessageReceived;
             this.ProgressFileReceived += this.Client_ProgressFileReceived;
             this.CustomHeaderReceived += this.Client_CustomHeaderReceived;
-
-            this.MessageFailed += this.Client_MessageFailed;
-            this.ErrorThrown += this.Client_ErrorThrown;
         }
 
         /// <summary>
@@ -65,6 +62,11 @@ namespace AsyncTcpClient
         /// Gets the client's state.
         /// </summary>
         public Client Client => this.client;
+
+        /// <summary>
+        /// Gets the client's controller.
+        /// </summary>
+        public IClientController Controller => this.controller;
 
         private void Client_Connected(SocketClient tcpClient)
         {

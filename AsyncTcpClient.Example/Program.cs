@@ -15,7 +15,7 @@ namespace AsyncTcpClient.Example
         static Program()
         {
             TcpClient.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.Console()
                 .CreateLogger();
         }
@@ -27,19 +27,27 @@ namespace AsyncTcpClient.Example
 
             client = new TcpClient(factory, controller);
             client.StartClient("127.0.0.1", 4040);
-            client.SendMessage("UserClient", false);
-            Task.Run(() => Send());
+            client.SendMessage("UserClient", false, false);
+            Send();
 
             Console.ReadLine();
         }
 
-        private static async Task Send()
+        private static void Send()
         {
-            while (true)
+            Parallel.For(0, 10, i =>
             {
-                await client.SendMessageAsync("Hello server!", false);
-                await Task.Delay(500);
-            }
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.ShotTaskType, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.AssetTaskType, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.AssetClass, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.Status, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.Folder, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.Project, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.Project, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.Project, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.Project, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+                client.SendMessage("{\"$id\":\"1\",\"$type\":\"Common.Message.Request, Common\",\"ID\":17,\"Item\":\"Data.ShotTaskType, Data, Version = 1.0.0.0, Culture = neutral, PublicKeyToken = null\",\"Message\":null,\"Method\":1}", false, false);
+            });
         }
     }
 }

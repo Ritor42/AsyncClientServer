@@ -15,7 +15,7 @@ namespace AsyncTcpClient.Example
 
         public override void HandleMessage(UserClient client, string message)
         {
-            Console.WriteLine($"New message received: {message}");
+            Console.WriteLine($"New message received: {message?.Length}");
         }
 
         public override void HandleCustomHeaderReceived(UserClient client, string message, string header)

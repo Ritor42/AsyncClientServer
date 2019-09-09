@@ -55,6 +55,9 @@ namespace AsyncTcpServer
             this.FileReceived += this.Server_FileReceived;
             this.MessageReceived += this.Server_MessageReceived;
             this.CustomHeaderReceived += this.Server_CustomHeaderReceived;
+
+            this.MessageFailed += this.Server_MessageFailed2;
+            this.ServerErrorThrown += this.Server_ServerErrorThrown;
         }
 
         /// <summary>
@@ -153,17 +156,17 @@ namespace AsyncTcpServer
             }
         }
 
-        private void Server_MessageFailed(int id, byte[] messageData, string exceptionMessage)
+        private void Server_ServerErrorThrown(Exception obj)
         {
-            if (this.connectedClients.TryGetValue(id, out Client client))
-            {
-                Logger.Error($"Message failed to send to {client.SocketInfo.LocalIPv4} with length {messageData.Length}{Environment.NewLine}{exceptionMessage}");
-            }
+            Logger.Error($"Error thrown:{Environment.NewLine}{obj?.Message}");
         }
 
-        private void Server_ErrorThrown(string exceptionMessage)
+        private void Server_MessageFailed2(int arg1, byte[] arg2, Exception arg3)
         {
-            Logger.Error($"Error thrown:{Environment.NewLine}{exceptionMessage}");
+            if (this.connectedClients.TryGetValue(arg1, out Client client))
+            {
+                Logger.Error($"Message failed to send to {client?.SocketInfo?.LocalIPv4} with length {arg2.Length}{Environment.NewLine}{arg3.Message}");
+            }
         }
     }
 }
